@@ -1,0 +1,69 @@
+Sub EnvíoMensajesW2()
+    Dim Teléfono As String
+    Dim Texto As String
+    Dim Celda As Range
+    Dim Hoja As Worksheet
+
+    ' Establece la hoja "pija"
+    Set Hoja = ThisWorkbook.Sheets("pija")
+
+    ' Recorrer todas las filas de la columna de Teléfonos
+    For Each Celda In Hoja.Range("A2:A" & Hoja.Cells(Hoja.Rows.Count, "A").End(xlUp).Row)
+        
+        ' Extraer los valores de las columnas
+        Teléfono = Celda.Value                ' Columna A: Teléfono
+        Texto = Celda.Offset(0, 2).Value      ' Columna C: Mensaje
+        
+        ' Abrir WhatsApp Desktop
+        AppActivate "WhatsApp"
+        
+        ' Esperar un momento para que WhatsApp cargue
+        Application.Wait (Now + TimeValue("00:00:02"))
+        
+        ' Abrir el chat con el teléfono y preparar el mensaje
+        SendKeys "^n", True
+        
+        ' Escribir el número de teléfono
+        Application.Wait (Now + TimeValue("00:00:01"))
+        SendKeys "~", True
+
+       
+        
+        ' Escribe el número de teléfono
+        Application.Wait (Now + TimeValue("00:00:01"))
+        SendKeys Teléfono, True
+        
+        
+        ' Desplazar y presionar enter para "Chatear"
+        Application.Wait (Now + TimeValue("00:00:01"))
+        SendKeys "{Tab}", True
+         Application.Wait (Now + TimeValue("00:00:01"))
+        SendKeys "{Tab}", True
+        Application.Wait (Now + TimeValue("00:00:01"))
+        SendKeys "~", True
+        
+        ' Escribe el mensaje y lo envía con Enter
+        Application.Wait (Now + TimeValue("00:00:04"))
+        SendKeys Texto, True
+        Application.Wait (Now + TimeValue("00:00:04"))
+        SendKeys "~", True
+        Application.Wait (Now + TimeValue("00:00:04"))
+        SendKeys "^v", True
+        Application.Wait (Now + TimeValue("00:00:04"))
+        SendKeys "~", True
+        Application.Wait (Now + TimeValue("00:00:04"))
+        SendKeys "{ESC}"
+        
+        ' Actualiza el estado del mensaje
+        Celda.Offset(0, 3).Value = "ENVIADO"
+        
+        ' Espera de 12 segundos antes de continuar con el siguiente mensaje
+        Application.Wait Now + TimeValue("00:00:12")
+
+    Next Celda
+
+    ' Activa nuevamente el teclado numérico
+    SendKeys "{NUMLOCK}", True
+
+End Sub
+
